@@ -22,27 +22,70 @@ something into an already-full cache.
 the memory-based AI of this code? (Hint: What is the memory-based AI of just the
 innermost loop?)
 
+    A single row of the matrices cannot fit in cache. 
+
+        2 (for A and B)
+      * 8 (bytes per double precision number)
+      * N (size of a row because the cache cannot fit a whole row)
+      * N^2 (due to outer loops) 
+    ------------------------------------------------
+    = 16N^3 bytes transferred between memory and cache
+
+    16N^3 floating point operations
+
+    Arithmetic Intensity = 16N^3/16N^3 = 1
 
 2. Now suppose that the cache is substantially larger than 16N, but
 substantially smaller than 8N^2. What is the AI now?
 
+    A single row can fit in cache but not the whole matrix.
+       8 (bytes per double precision number)
+     * N (size of a row of B per k loop)
+     * N^2 (outer loops)
+    ------------------------------------------------
+    = 8N^3 bytes transferred between memory and cache
+
+    16N^3 floating point operations
+
+    Arithmetic Intensity = 16N^3/8N^3 = 2
 
 3. Now suppose the cache is large enough to hold all of A, B, and C. What is the
 AI now? (Hint: Writing to a byte of memory not already in the cache incurs two
 memory transfers: one to move the data to the cache for writing, and one to move
 the written data back to main memory.)
 
+       8N^2 bytes read for A
+     + 8N^2 bytes read for B
+     + 8N^2 bytes read for C
+    ------------------------------------------------
+    = 24N^2 bytes transferred between memory and cache.
+
+    16N^3 floating point operations.
+
+    Arithmetic intensity = 16N^3 / 24N^2 = 2N/3
 
 4. Cache overflowing. On my CPU (Intel i7-4700 HQ), L1, L2, and L3 caches are 32
 KB, 256 KB, and 6 MB respectively. What is the largest problem size N that will
 fit in each cache? What is the arithmetic intensity associated with each problem
 size?
 
+    Size of the 3 matrices in bytes = 3 * 8 * N^2 = 24N^2
+
+    For L1 cache : N = sqrt(32 * 1024 / 24)       ~  37 
+                 : Arithmetic Intensity ~ N
+    For L2 cache : N = sqrt(256 * 1024 / 24)      ~ 105
+                 : Arithmetic Intensity ~ N
+    For L3 cache : N = sqrt(6 * 1024 * 1024 / 24) ~ 512
+                 : Arithmetic Intensity ~ N
 
 5. My CPU has 4 cores, each of which can do 8 fused multiply-adds per cycle, has
 a clock rate of 2.4 GHz, and a memory bandwidth of 25.6 GB/s. At what arithmetic
 intensity does my machine become CPU-bound?
 
+    Peak flop rate = 4 cores * 8 FMA/cycle * 2.4GHz = 76.8GF/s
+    Let the arithmetic intensity at which the machine becomes CPU-bound be x. 
+    Then, x * 25.6 GB/s = 76.8 GF/s.
+    x = 3.
 
 6. So, for what size range for N will naive matmul be CPU-bound on my machine?
 
