@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "crc32.h"
 #include "life_common.h"
@@ -124,8 +125,15 @@ int main(int argc, char** argv)
             print_board(&problem);
             advance_board(&problem, 1);
         }
-    } else
+    } else {
+        clock_t start = clock(), diff;
         advance_board(&problem, problem.g);
+        diff = clock() - start;
+        int msec = diff * 1000 / CLOCKS_PER_SEC;
+        printf("%d milliseconds to compute %d generations with board size %d.\n", 
+                msec, problem.g, problem.nboard);
+     
+    }
     printf("Final checksum: %08X\n", board_checksum(&problem));
     destroy_board(&problem);
     return 0;
