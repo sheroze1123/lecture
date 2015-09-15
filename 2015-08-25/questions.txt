@@ -18,6 +18,16 @@ In practice, this took X time.  This includes
 Consider the following questions:
 
 1. What is a simple model that would predict this time?
+
+    If N is the total number of students, R the number of rows, G the gather time, S the 
+    start time, C the row compute time and A the gather arithmetic time, then the total time is,
+        N/R * C + S + (G+A)R
+
 2. What about a simple model to predict time for one person to count?
+
+    If N is the total number of students and A is the time to add one to the total, the total time,
+        N*A
+
 3. How big should the class be before the parallel method takes less time?
+        N/R * C + S + (G+A)R < N*A
 
