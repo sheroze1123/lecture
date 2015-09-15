@@ -61,30 +61,35 @@ GCC + (OpenMPI and OpenBLAS in parallel) + (LAPACK after OpenBLAS parallel with 
 git clone git@github.com:cornell-cs5220-f15/membench.git
 \end{lstlisting}
 
-On your own machine, build `membench` and generate the associated plots; for many of you, this should be as simple as typing `make` at the terminal (though I assume you have Python with pandas and Matplotlib installed; see also the note about Clang and OpenMP in the leading comments of the Makefile).  Look at the output file timings-heat.pdf; what can you tell about the cache architecture on your machine from the plot?
+On your own machine, build `membench` and generate the associated plots; for many of you, this should be as simple as typing `make` at the terminal (though I assume you have Python with pandas and Matplotlib installed; see also the note about Clang and OpenMP in the leading comments of the Makefile).  Look at the output file timings-heat.pdf; what can you tell about the cache architecture on your machine from the plot? \\
 
+\includegraphics[scale=0.9]{membench/timings-heat.pdf} \\
+The worst performant region is when the stride is $2^{14}$ and the size is $2^{24}$. 
 \item From the cloned repository, check out the totient branch:
 
 \begin{lstlisting}
 git checkout totient
 \end{lstlisting}
 
-You may need to move generated files out of the way to do this. If you prefer, you can also look at the files on GitHub. Either way, repeat the exercise of problem 5.  What can you tell about the cache architecture of the totient nodes?
+You may need to move generated files out of the way to do this. If you prefer, you can also look at the files on GitHub. Either way, repeat the exercise of problem 5.  What can you tell about the cache architecture of the totient nodes? \\
+
+\includegraphics[scale=0.9]{membench/timings-heat_totient.pdf} \\
 
 \item Implement the following three methods of computing the centroid of a million two-dimensional coordinates (double precision). Time and determine which is faster:
 
 \begin{enumerate}
-    \item  Store an array of (x,y) coordinates; loop i and simultaneously sum the xi and yi
+    \item  Store an array of (x,y) coordinates; loop i and simultaneously sum the xi and yi. \\
+		Time taken: 3.882146e-02 (1.03036 GFLop/s)
 
-    \item Store an array of (x,y) coordinates; loop i and sum the xi, then sum the yi in a separate loop
 
-    \item Store the xi in one array, the yi in a second array. Sum the xi, then sum the yi.
+    \item Store an array of (x,y) coordinates; loop i and sum the xi, then sum the yi in a separate loop \\
+		Time taken: 5.588314e-02 (0.715779 GFLop/s)
+		
+    \item Store the xi in one array, the yi in a second array. Sum the xi, then sum the yi. \\
+    		Time taken: 2.763550e-02 (1.44741 GFLop/s) (Fastest)
 \end{enumerate}
 
-    I recommend doing this on the class cluster using the Intel compiler.  To do this, run "module load cs5220" and run (e.g.)
-\begin{lstlisting}
-icc -o centroid centroid.c
-\end{lstlisting}
+
 
 \end{exercises}
 
