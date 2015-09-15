@@ -29,8 +29,8 @@ the glider pattern for a few generations.
           (n+2)^2 elements. The size of the L3 cache of one of the totient nodes 
           is, 15MB. Each element in the board is a char* taking 4bytes of memory.
           Then, 1 * 2 * (n+2)^2 bytes = 15MB.
-          n ~ 3872.
-        - A 3872 x 3872 board would fit in the L3 cache of a totient node.
+          n ~ 2738.
+        - A 2738 x 2738 board would fit in the L3 cache of a totient node.
         - The totient node took 420 milliseconds to compute 50 generations with board size 500.
         - That is, 29.761 million cells/second. 
         - The totient node took 27510 milliseconds to compute 50 generations with board size 4000.
