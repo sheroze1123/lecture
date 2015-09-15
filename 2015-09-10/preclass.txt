@@ -2,13 +2,21 @@
    draw a roofline diagram for one totient node (assuming only the
    host cores are used, for the moment).  How do things change with
    the addition of the two Phi boards?
+    - Look at attached roofline_totient.png
 
 2. What is the difference between two cores and one core with
    hyperthreading?
+    - Hyperthreading provides the illusion of having two cores by simulating two 
+      logical cores using instruction level parallelism.
+    - With hyperthreading, the two logical cores share physical resources and 
+      with two cores, a communication medium is needed to share physical resources.
 
 3. Do a Google search to find a picture of how memories are arranged
    on the Phi architecture.  Describe the setup briefly in your own
    words.  Is the memory access uniform or non-uniform?
+    - The memory access in non-uniform. 
+    - Each core has its own private L2 cache.
+    - Memory controllers and PCIe logic is used to interface to the GGDR5 memory.
 
 4. Consider the parallel dot product implementations suggested in the
    slides.  As a function of the number of processors, the size of the
@@ -17,3 +25,8 @@
    [Note that dot products have low arithmetic intensity -- the
     roofline model may be useful for reasoning about the peak
     performance for computing pieces of the dot product]
+    - Let the number of processors be n, size of the vectors be D, time to send a message
+      be m and the time per flop be t.
+    - Then, the serial computation will take 2Dt time.
+    - The parallel implmentation will take 2Dt/n + mn.
+    - The speedup will then be 2Dt/( 2Dt/n + mn ).
