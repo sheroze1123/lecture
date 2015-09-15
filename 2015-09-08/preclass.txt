@@ -83,11 +83,18 @@ a clock rate of 2.4 GHz, and a memory bandwidth of 25.6 GB/s. At what arithmetic
 intensity does my machine become CPU-bound?
 
     Peak flop rate = 4 cores * 8 FMA/cycle * 2.4GHz = 76.8GF/s
-    Let the arithmetic intensity at which the machine becomes CPU-bound be x. 
+    Let the arithmetic intensity at which the machine becomes memory-bound be x. 
     Then, x * 25.6 GB/s = 76.8 GF/s.
     x = 3.
+    At arithmetic intensity < 3, the machine becomes CPU-bound.
 
 6. So, for what size range for N will naive matmul be CPU-bound on my machine?
 
+    If 16N^3 > 76.8 * 10^9, the naiva matmul becomes CPU-bound. 
+    Then for N < 1686, the naive matmul becomes CPU-bound.
 
 7. So, what will a plot of Flops/sec vs N look like?
+    
+    Until N = 1686, the function would be plateauing at peak flop rate (76.8GF/s). 
+    After N = 1686, the function would decrease monotonoically, we have to fetch more and
+    more data. 
