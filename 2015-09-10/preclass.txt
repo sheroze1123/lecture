@@ -2,7 +2,15 @@
    draw a roofline diagram for one totient node (assuming only the
    host cores are used, for the moment).  How do things change with
    the addition of the two Phi boards?
-    - Look at attached roofline_totient.png
+    - Look at attached roofline_totient.png for one totient node without Phi boards.
+    - Peak floating point performance Xeon E5-2620: 120GF/s
+      Max meory bandwidth Xeon E5-2620 : 59GB/s
+    - Look at attached roofline_totient_phi.png for one totient node with Phi boards.
+    - Peak floating point performance Xeon E5-2620: 120GF/s
+      Max meory bandwidth Xeon E5-2620 : 59GB/s
+      Peak floating point performance Xeon Phi 5110p : 1010GF/s
+      Max memory bandwith: 320GB/s
+
 
 2. What is the difference between two cores and one core with
    hyperthreading?
