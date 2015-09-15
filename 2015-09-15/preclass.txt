@@ -27,7 +27,7 @@ the glider pattern for a few generations.
     board that does not fit?
         - For each problem, we have to keep track of 2 boards. Each board has 
           (n+2)^2 elements. The size of the L3 cache of one of the totient nodes 
-          is, 15MB. Each element in the board is a char* taking 4bytes of memory.
+          is, 15MB. Each element in the board is a char taking 1byte of memory.
           Then, 1 * 2 * (n+2)^2 bytes = 15MB.
           n ~ 2738.
         - A 2738 x 2738 board would fit in the L3 cache of a totient node.
