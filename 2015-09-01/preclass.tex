@@ -38,6 +38,11 @@ I have a Mid 2014 Retina MacBook Pro. It has a Intel Core i5-4278U processor wit
 
 \item Suppose there are $t$ tasks that can be executed in a pipeline with $p$ stages.  What is the speedup over serial execution of the same tasks? \\
 
+Let $u$ be the time per stage. Assume that all stages take the same amount of time. \\
+Then, the time for the serial execution is $tu$. \\
+With a pipeline, the time taken is $pu + (t-1)u$. \\
+The speedup is then, $\dfrac{t}{p + t -1}$. \\
+
 \item Consider the following list of tasks (assume they can't be pipelined): \\
 
 compile GCC (1 hr) \\
@@ -46,7 +51,10 @@ compile OpenBLAS (0.25 hr) - depends on GCC \\
 compile LAPACK (0.5 hr) - depends on GCC and OpenBLAS \\
 compile application (0.5 hr) - depends on GCC, OpenMPI, OpenBLAS, LAPACK \\
 
-What is the minimum serial time between starting to compile and having a compiled application?  What is the minimum parallel time given an arbitrary number of processors?
+What is the minimum serial time between starting to compile and having a compiled application? \\
+GCC + OpenMPI + OpenBLAS, LAPACK + Application : 2.75 hours. \\ 
+What is the minimum parallel time given an arbitrary number of processors? \\
+GCC + (OpenMPI and OpenBLAS in parallel) + (LAPACK after OpenBLAS parallel with OpenMPI) + Application: 2.25 hours. \\
 
 \item Clone the membench repository from GitHub:
 \begin{lstlisting}
