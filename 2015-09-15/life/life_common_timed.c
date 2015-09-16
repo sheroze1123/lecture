@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+#ifdef WITH_TIMING
+#include <omp.h>
+#endif
+
 #include "crc32.h"
 #include "life_common.h"
 
@@ -126,6 +130,7 @@ int main(int argc, char** argv)
             advance_board(&problem, 1);
         }
     } else {
+<<<<<<< HEAD
         clock_t start = clock(), diff;
         advance_board(&problem, problem.g);
         diff = clock() - start;
@@ -133,6 +138,17 @@ int main(int argc, char** argv)
         printf("%d milliseconds to compute %d generations with board size %d.\n", 
                 msec, problem.g, problem.nboard);
      
+=======
+#ifdef WITH_TIMING
+        double t0 = omp_get_wtime();
+        advance_board(&problem, problem.g);
+        double t1 = omp_get_wtime();
+        printf("Cells / sec: %e\n",
+               problem.g * problem.nboard * problem.nboard / (t1-t0));
+#else
+        advance_board(&problem, problem.g);
+#endif
+>>>>>>> b46bd944e64003be40722c787a5e1eed75068354
     }
     printf("Final checksum: %08X\n", board_checksum(&problem));
     destroy_board(&problem);
