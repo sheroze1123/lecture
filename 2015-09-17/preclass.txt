@@ -5,9 +5,15 @@ than on the numerical analysis, but I am working under the assumption
 that you can figure out the numerical jargon.
 
 0.  How much time did you spend on this pre-class exercise, and when?
+        - Start time: 7:30pm, September 16, 2015
+        - End time  : 8:42pm, September 16, 2015
+        - Time spent: 1:12
 
 1.  What are one or two points that you found least clear in the
     9/17 slide decks (including the narration)?
+        - How backward Euler is providing stability over forward Euler
+        - How 'taking a step' helps in solving differential equations.
+        - Why we can take long steps in an implicit approach.
 
 2.  Fill in the most straightforward implementation you can think of
     for multiplying a compressed sparse row matrix by a vector.
@@ -24,7 +30,15 @@ that you can figure out the numerical jargon.
     
       void sparse_multiply(csr_t* A, double* x, double* result)
       {
-          /* Fill in here */
+>>>>>>      int non_zero_entries, index, col_index, x_index, i, j;
+>>>>>>      for(i = 0; i<n; i++) {
+>>>>>>          non_zero_entries = A->ptr[i+1] - A->ptr[i]; 
+>>>>>>          col_index = ptr[i];
+>>>>>>          for(j=0; j<non_zero_entries; j++){
+>>>>>>              x_index = A->col[col_index + j];
+>>>>>>              result[x_index] = A->pr[col_index + j] * x[x_index];
+>>>>>>          }
+>>>>>>      }
       } 
 
 3.  From the slides, complete the following short code:
@@ -32,7 +46,7 @@ that you can figure out the numerical jargon.
       double laplacian_u(double (*u)(double x, double y),
                          double h, double x, double y)
       {
-          /* Estimate the Laplacian applied to u at (x,y) */
+>>>>>     return (4 * u(x,y) - u(x-h,y) - u(x+h,y) - u(x,y-h) - u(x,y+h);
       }
 
     If you are unfamiliar with the syntax, the first argument to
@@ -61,3 +75,13 @@ that you can figure out the numerical jargon.
     several steps without communicating, can you describe how to
     similarly advance this scheme?  Are there any advantages to such
     an organization if there is only one core available?
+
+        - Consider a cell u[j,k]. This cells depends on u[j-1,k-1], u[j-1,k+1],
+          u[j-2,k].
+        - So, to process n steps without communicating, we need to keep a shadow
+          cells in the boundary that are n cells wide since these can influence
+          the progression of future cells in the temporal domain.
+        - If there is one core available, there is still an advantage. Consider
+          u matrix where the x dimension is very large. Then, by computing
+          blocks with shadow cells at the boundaries, we can use the cache more 
+          efficiently.
