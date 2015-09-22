@@ -152,8 +152,18 @@ void workq_put(workq_t* workq, void* data)
 {
     task_t* task = (task_t*) malloc(sizeof(task_t));
     task->data = data;
+
+    // Get the lock that ensures mutual exclusion to workq.
+    workq_lock(workq);
+
     task->next = workq->tasks;
     workq->tasks = task;
+
+    // Signal a waiting consumer to get an item
+    workq_signal(workq);
+
+    // Release the work queue lock to let consumer get item.
+    workq_unlock(workq);
 }
 
 
@@ -165,12 +175,25 @@ void workq_put(workq_t* workq, void* data)
 void* workq_get(workq_t* workq)
 {
     void* result = NULL;
-    if (workq->tasks) {
-        task_t* task = workq->tasks;
-        result = task->data;
-        workq->tasks = task->next;
-        free(task);
+    workq_lock(workq);
+
+    // Wait till there is an item to consume
+    workq_wait(workq);
+
+    // No more items to consume. Return NULL to end consumers' misery.
+    if(workq->done == 1 && workq->tasks == NULL) {
+        workq_unlock(workq);
+        return NULL;
     }
+
+    task_t* task = workq->tasks;
+    workq->tasks = task->next;
+
+    // Unlock the queue since queue operations are done.
+    workq_unlock(workq);
+
+    result = task->data;
+    free(task);
     return result;
 }
 
@@ -183,7 +206,10 @@ void* workq_get(workq_t* workq)
  */
 void workq_finish(workq_t* workq)
 {
+    workq_lock(workq);
     workq->done = 1;
+    workq_broadcast(workq);
+    workq_unlock(workq);
 }
 
 
