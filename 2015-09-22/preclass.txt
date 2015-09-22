@@ -1,7 +1,13 @@
 0.  How much time did you spend on this pre-class exercise, and when?
+        Start time: 09:15pm, September 21, 2015
+        End time:   
 
 1.  What are one or two points that you found least clear in the
     9/22 slide decks (including the narration)?
+        How correlation between streams happen if there is a RNG per thread in
+        the 'Parallel RNG strategies' slide.
+        What pthread attributes are.
+        
 
 2.  The pthread_mc.c file in the demo subdirectory runs a Monte Carlo
     simulation to estimate the expected value of a uniform random
@@ -13,14 +19,46 @@
        time per trial (t_trial), and time to update the global
        counters in the critical section (t_update).
 
+        Let N_max be the maximum number of trials.
+        Then, each processor would compute N_max/(N * p) batches. 
+        Since global state is needed to be updated after every batch, 
+        N_max/(N * p) * p * t_update time is spent by all processors in the 
+        critical section. 
+        Since trials are performed in parallel in the processors, time
+        spent in trials is t_trial * N_max/(N * p).
+        Therefore, the running time of the simulation is,
+        (N_max/N) ( t_update + t_trial/p )
+
     b) Run the code with a few different parameter values in order
        to estimate N, t_trial, and t_update for this code on
        a totient compute node.
+
+        Times keeping N at 500:
+            1 threads (pthreads): 0.49983 (0.000288609): 7.104000e-03 s, 1000500 trials
+            2 threads (pthreads): 0.499954 (0.000288538): 3.919000e-03 s, 1001000 trials
+            3 threads (pthreads): 0.499774 (0.000288443): 2.608000e-03 s, 1001500 trials
+            4 threads (pthreads): 0.499751 (0.000288477): 1.952000e-03 s, 1002000 trials
+            5 threads (pthreads): 0.499897 (0.000288399): 1.681000e-03 s, 1002500 trials
+            6 threads (pthreads): 0.499785 (0.000288346): 1.502000e-03 s, 1003000 trials
+        Here, N is kept constant and t_trial is assumed to be constant. 
+        Solving for t_trial gives : 3.165e-05 s
+        Plugging in for t_update  : 3.673e-06 s
 
     c) Based on your model, suggest a strategy for choosing the batch
        size.  How might you generalize this strategy to automatically
        choose batch sizes for different types of computational
        experiments?
+        
+        We can assume that the lock contention time as the number of processors
+        go up as being constant compared to the time taken to compute the trials.
+        Then, we can approximate the time spent updating the global variables by
+        all the processors as linearly proportional to the number of batches. 
+        Reducing the batch size can increase the total time spent in the critical 
+        sections. Increasing the batch size can lead to too much unnecessary computations
+        after the tolerance level.
+        To automatically choose batch sizes, we can perform a search over a batch size
+        region while also varying the number of processors but keeping the total number of
+        trials constant. 
     
 3.  In the workq subdirectory of this directory, there is a basic work
     queue implementation.  Following the strategy outlined in the
