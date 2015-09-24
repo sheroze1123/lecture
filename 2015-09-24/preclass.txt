@@ -46,8 +46,22 @@
        size.  How might you generalize this strategy to automatically
        choose batch sizes for different types of computational
        experiments?
+        
+        We can assume that the lock contention time as the number of processors
+        go up as being constant compared to the time taken to compute the trials.
+        Then, we can approximate the time spent updating the global variables by
+        all the processors as linearly proportional to the number of batches. 
+        Reducing the batch size can increase the total time spent in the critical 
+        sections. Increasing the batch size can lead to too much unnecessary computations
+        after the tolerance level.
+        To automatically choose batch sizes, we can perform a search over a batch size
+        region while also varying the number of processors but keeping the total number of
+        trials constant. 
 
 3.  The "OpenMP pitfalls" paper describes some common pitfalls (both
     performance and correctness) in OpenMP codes.  Go through the
     checklist in the paper for omp_mc.c.  What performance mistakes
     are there in the demonstration implementation?
+        - Seeding in a critical section
+        - Not declaring seed inside the parallel section and setting seed as 'private'
+        - Result updates happen in critical sections but could be done with atomic directives.
