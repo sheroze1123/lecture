@@ -18,10 +18,29 @@
        terms of the number of trials (N), number of processors (p),
        time per trial (t_trial), and time to update the global
        counters in the critical section (t_update).
+    
+        Let B be the batch size.
+        Time in the critical section is then, N/B * t_update.
+        Time spent on trials is, N/p * t_trial.
+        Total time for the simulation is N(t_update/B + t_trial/p)
 
     b) Run the code with a few different parameter values in order
        to estimate N, t_trial, and t_update for this code on
        a totient compute node.
+
+        Times keeping B at 500:
+            1 threads (pthreads): 0.49983 (0.000288609): 7.104000e-03 s, 1000500 trials
+            2 threads (pthreads): 0.499954 (0.000288538): 3.919000e-03 s, 1001000 trials
+            3 threads (pthreads): 0.499774 (0.000288443): 2.608000e-03 s, 1001500 trials
+            4 threads (pthreads): 0.499751 (0.000288477): 1.952000e-03 s, 1002000 trials
+            5 threads (pthreads): 0.499897 (0.000288399): 1.681000e-03 s, 1002500 trials
+            6 threads (pthreads): 0.499785 (0.000288346): 1.502000e-03 s, 1003000 trials
+
+        For one thread case, 1000500(t_update/500 + t_trial) = 7.104e-03
+        For two threads, 1001000(t_update/500 + t_trial/2) = 3.919e-03
+
+        t_update = 3.6486e-7s
+        t_serial = 6.3707e-9s
 
     c) Based on your model, suggest a strategy for choosing the batch
        size.  How might you generalize this strategy to automatically
