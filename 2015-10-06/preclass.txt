@@ -1,6 +1,7 @@
 0.  How much time did you spend on this pre-class exercise, and when?
         Start time: 09:00pm
-        End time:   
+        End time:   10:00pm
+        Spent:      01:00
 
 1.  What are one or two points that you found least clear in the
     10/06 slide decks (including the narration)?
@@ -24,8 +25,13 @@
        OpenMPI, and re-run the on-node tests using OpenMPI (note:
        you will have to add a module load to the start of the PBS
        scripts).  How do the timings differ from the Intel MPI timings?
+            Intel MPI timings are lower.
 
     c) When running at the peak rate (e.g. 16 double precision
        flops/cycle), how many (double precision) floating point ops
        could two totient cores do in the minimal time required for one
        MPI message exchange?
+            Peak flop rate of a totient core is 120GF/s.
+            The average time for a message exchange is 3e-06s.
+            Then two cores can do 1200000 floating point operations in the time
+            required for one message exchange.
