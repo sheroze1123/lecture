@@ -1,7 +1,10 @@
 0.  How much time did you spend on this pre-class exercise, and when?
+        15 minutes for the exercise.
+        1.5 hours on the slides and reading.
 
 1.  What are one or two points that you found least clear in the
     10/08 slide decks (including the narration)?
+        MPI_Ssend
 
 2.  Now that we are now basically a third of the way into the
     semester, and are (mostly) settled into the steady pace of things,
@@ -16,6 +19,16 @@
     http://cornell-cs5220-f15.github.io/slides/2015-09-15-particle.html#/11
 
     a) In your own words, describe what ring.c is doing.
+        - Each memeber in the communicator begins with a local buffer of data.
+        - Each member locally interacts their data elements in a pairwise manner and 
+        accumulates the data in a result buffer. 
+        - Next, members pass their data to the next member. The 'next' member is 
+        chosen by the rank assigned to a member in the ring topology. 
+        - Furthermore, each member gets a data buffer from their previous member in the ring.
+        - Then, each member interacts their local data with the the received data in a pairwise
+        manner and accumulates the data in the result buffer.
+        - This process occurs untill all data is interacted with all other data in a pairwise
+        manner.
 
     b) How might you modify the code to have the same computational
        pattern, but using non-blocking communication rather than
@@ -23,3 +36,10 @@
        one isn't supposed to read from a buffer that is being
        handled by a non-blocking send, so it is probably necessary
        to use three temporary buffers rather than the current two.
+        - Instead of performing an MPI_Sendrecv at the beginning of a phase,
+        we can begin a recv to a third buffer and perform local interactions while
+        the next data is received.
+        - Once the local interactions are complete, we can initiate a send and
+        wait till the receive is complete.
+        - When the receive is complete, we can initiate a new recv, and begin local interations.
+        - Repeat second step.
